@@ -1,0 +1,73 @@
+package com.contentCreation.contents.controllers;
+
+import com.contentCreation.contents.model.Content;
+import com.contentCreation.contents.service.ContentManager;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/contents")
+public class contentController {
+
+    private Logger log = LoggerFactory.getLogger(contentController.class);
+
+    @Autowired
+    private ContentManager service;
+
+    @Autowired
+    private ObjectMapper mapper;
+
+    @PostMapping
+    public ResponseEntity<Content> createContent(@RequestParam String content, @RequestParam MultipartFile file) throws JsonProcessingException {
+        Content content1 = mapper.readValue(content, Content.class);
+        log.info("Content {}", content1);
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.createContent(content1, file));
+    }
+
+    @DeleteMapping("/{contentId}/{userName}")
+    public ResponseEntity<String> deleteContentsById(@PathVariable String contentId, @PathVariable String userName) {
+        return ResponseEntity.status(HttpStatus.OK).body(service.deleteContent(contentId, userName));
+    }
+
+    //    Try it on the browser
+    @GetMapping("id/{contentId}")
+    public ResponseEntity<byte[]> getContent(@PathVariable String contentId) {
+        byte[] bytes = service.showContents(contentId);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.IMAGE_PNG);
+        return new ResponseEntity<>(bytes, headers, HttpStatus.OK);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Content>> getAllContents() {
+        log.info("Content List {}", service.getContents());
+        return ResponseEntity.status(HttpStatus.FOUND).body(service.getContents());
+    }
+
+    @GetMapping("username/{userName}")
+    public ResponseEntity<List<Content>> getContentsByUserName(@PathVariable String userName) {
+        return ResponseEntity.status(HttpStatus.OK).body(service.getContentsByUserName(userName));
+    }
+
+    @GetMapping("/data/{contentId}")
+    public ResponseEntity<String> getDataByContentId(@PathVariable String contentId) {
+        return ResponseEntity.status(HttpStatus.OK).body(service.contentSummary(contentId));
+    }
+
+    @PutMapping
+    public ResponseEntity<Content> updateContents(@RequestBody Content content) {
+        return ResponseEntity.status(HttpStatus.OK).body(service.updateContent(content));
+    }
+
+}
