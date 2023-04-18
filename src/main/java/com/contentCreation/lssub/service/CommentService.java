@@ -3,6 +3,8 @@ package com.contentCreation.lssub.service;
 import com.contentCreation.lssub.exceptions.EmptyListException;
 import com.contentCreation.lssub.model.Comment;
 import com.contentCreation.lssub.repository.CommentRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -12,6 +14,7 @@ import java.util.UUID;
 
 @Service
 public class CommentService {
+    private Logger log = LoggerFactory.getLogger(CommentService.class);
 
     @Autowired
     private CommentRepository repository;
@@ -25,7 +28,7 @@ public class CommentService {
 
     public String deleteComment(String commentId) {
         repository.deleteById(commentId);
-        return "Comment with " + commentId + " has been deleted successfully";
+        return "Comment has been deleted successfully";
     }
 
     //get all comments on contentid
@@ -34,6 +37,7 @@ public class CommentService {
         if (byContentId.size() > 0) {
             return byContentId;
         } else {
+            log.error("This Post does not have any comments.");
             throw new EmptyListException("Post does not have any comments.");
         }
     }
@@ -44,10 +48,10 @@ public class CommentService {
         if (byUserName.size() > 0) {
             return byUserName;
         } else {
+            log.error(userName + " haven't committed anything.");
             throw new EmptyListException("You haven't committed anything.");
         }
     }
-
 
     public List<Comment> getByUserNameAndContentId(String userName, String contentId) {
         return repository.findByUserNameAndContentId(userName, contentId);
@@ -55,7 +59,10 @@ public class CommentService {
 
     public Comment updateCommentById(@RequestBody Comment comment) {
         Comment commentToUpdated = repository.findById(comment.getCommentId()).orElseThrow(
-                () -> new RuntimeException("Comment with comment id provided " + comment.getCommentId() + " is not present.")
+                () -> {
+                    log.error("Comment is not present.");
+                    return new RuntimeException("Comment with comment id provided " + comment.getCommentId() + " is not present.");
+                }
         );
         commentToUpdated.setComments(comment.getComments());
         repository.save(commentToUpdated);

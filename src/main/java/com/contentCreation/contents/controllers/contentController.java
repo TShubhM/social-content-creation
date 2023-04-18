@@ -31,12 +31,13 @@ public class contentController {
     @PostMapping
     public ResponseEntity<Content> createContent(@RequestParam String content, @RequestParam MultipartFile file) throws JsonProcessingException {
         Content content1 = mapper.readValue(content, Content.class);
-        log.info("Content {}", content1);
+        log.info("Content {} created", content1);
         return ResponseEntity.status(HttpStatus.CREATED).body(service.createContent(content1, file));
     }
 
     @DeleteMapping("/{contentId}/{userName}")
     public ResponseEntity<String> deleteContentsById(@PathVariable String contentId, @PathVariable String userName) {
+        log.info("{} has been deleted by {}", contentId, userName);
         return ResponseEntity.status(HttpStatus.OK).body(service.deleteContent(contentId, userName));
     }
 
@@ -46,6 +47,7 @@ public class contentController {
         byte[] bytes = service.showContents(contentId);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.IMAGE_PNG);
+        log.info("content with id {} retrieved.", contentId);
         return new ResponseEntity<>(bytes, headers, HttpStatus.OK);
     }
 
@@ -57,17 +59,22 @@ public class contentController {
 
     @GetMapping("username/{userName}")
     public ResponseEntity<List<Content>> getContentsByUserName(@PathVariable String userName) {
+        log.info("Contents uploaded by {} are {}", userName, service.getContentsById(userName));
         return ResponseEntity.status(HttpStatus.OK).body(service.getContentsByUserName(userName));
     }
 
     @GetMapping("/data/{contentId}")
     public ResponseEntity<String> getDataByContentId(@PathVariable String contentId) {
+        log.info("{} has {}.", contentId, service.contentSummary(contentId));
         return ResponseEntity.status(HttpStatus.OK).body(service.contentSummary(contentId));
     }
 
     @PutMapping
     public ResponseEntity<Content> updateContents(@RequestBody Content content) {
-        return ResponseEntity.status(HttpStatus.OK).body(service.updateContent(content));
+        log.info("content Before update {}", service.getContentsById(content.getContentId()));
+        Content content1 = service.updateContent(content);
+        log.info("Contents After update {}", content1);
+        return ResponseEntity.status(HttpStatus.OK).body(content1);
     }
 
 }
