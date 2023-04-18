@@ -1,6 +1,5 @@
 package com.contentCreation.lssub.service;
 
-import com.contentCreation.lssub.exceptions.LikeAlreadyPresentException;
 import com.contentCreation.lssub.model.Like;
 import com.contentCreation.lssub.repository.LikeRepository;
 import org.slf4j.Logger;
@@ -21,9 +20,11 @@ public class LikeService {
     public Like addLike(Like like) {
         String likeId = UUID.randomUUID().toString();
         like.setLikeId(likeId);
-        if (repository.findByUserNameAndContentId(like.getUserName(), like.getContentId()) != null) {
-            log.error("You have already given like to the content with contentId " + like.getContentId());
-            throw new LikeAlreadyPresentException("You have already given like to the content with contentId " + like.getContentId());
+        Like byUserNameAndContentId = repository.findByUserNameAndContentId(like.getUserName(), like.getContentId());
+        if (byUserNameAndContentId != null) {
+            deleteLike(like.getUserName(), like.getContentId());
+            log.info("Removed Like");
+            return byUserNameAndContentId;
         } else {
             return repository.save(like);
         }
