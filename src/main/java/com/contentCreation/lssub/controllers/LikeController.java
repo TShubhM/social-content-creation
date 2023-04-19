@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -21,7 +22,7 @@ public class LikeController {
     private LikeService service;
 
     @PostMapping
-    public ResponseEntity<Like> addLike(@RequestBody Like like) {
+    public ResponseEntity<Like> addLike(@RequestBody Like like) throws IOException, InterruptedException {
         log.info("addLike method invoked.");
         return ResponseEntity.status(HttpStatus.CREATED).body(service.addLike(like));
     }

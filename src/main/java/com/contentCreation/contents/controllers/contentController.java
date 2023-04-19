@@ -59,7 +59,7 @@ public class contentController {
 
     @GetMapping("username/{userName}")
     public ResponseEntity<List<Content>> getContentsByUserName(@PathVariable String userName) {
-        log.info("Contents uploaded by {} are {}", userName, service.getContentsById(userName));
+        log.info("Contents uploaded by {} are {}", userName, service.getContentsByUserName(userName));
         return ResponseEntity.status(HttpStatus.OK).body(service.getContentsByUserName(userName));
     }
 
