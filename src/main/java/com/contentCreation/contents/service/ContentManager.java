@@ -32,14 +32,9 @@ public class ContentManager {
     @Autowired
     private CommentRepository commentRepo;
 
-    public Content createContent(Content content, MultipartFile file) {
+    public Content createContent(Content content, MultipartFile file) throws IOException {
         String contentId = UUID.randomUUID().toString();
-        try {
-            content.setMediaFilePath(file);
-        } catch (IOException e) {
-            log.error("Error occurred While creating content {}", e);
-            throw new RuntimeException(e);
-        }
+        content.setMediaFilePath(file);
         content.setContentId(contentId);
         repository.save(content);
         return content;

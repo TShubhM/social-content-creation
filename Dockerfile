@@ -1,4 +1,4 @@
 FROM openjdk:11-jre-slim
-ARG JAR_FILE=target/*.jar
-COPY ${JAR_FILE} content.jar
-ENTRYPOINT ["java","-jar","content.jar"]
+EXPOSE 8080
+ADD target/content-share.jar content-share.jar
+ENTRYPOINT ["java","-jar","content-share.jar"]
