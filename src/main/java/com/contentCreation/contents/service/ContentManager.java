@@ -32,9 +32,17 @@ public class ContentManager {
     @Autowired
     private CommentRepository commentRepo;
 
-    public Content createContent(Content content, MultipartFile file) throws IOException {
+
+    public Content createContent(Content content, String fileurl) {
         String contentId = UUID.randomUUID().toString();
-        content.setMediaFilePath(file);
+
+            content.setMediaFilePath(fileurl);
+
+
+//     public Content createContent(Content content, MultipartFile file) throws IOException {
+//         String contentId = UUID.randomUUID().toString();
+//         content.setMediaFilePath(file);
+
         content.setContentId(contentId);
         repository.save(content);
         return content;
@@ -50,11 +58,11 @@ public class ContentManager {
         }
     }
 
-    public byte[] showContents(String contentID) {
-        Content content = repository.findById(contentID).get();
-        byte[] mediaFilePath = content.getMediaFilePath();
-        return mediaFilePath;
-    }
+//    public byte[] showContents(String contentID) {
+//        Content content = repository.findById(contentID).get();
+//        byte[] mediaFilePath = content.getMediaFilePath();
+//        return mediaFilePath;
+//    }
 
     public Content getContentsById(String contentId) {
         return repository.findById(contentId).orElseThrow(
