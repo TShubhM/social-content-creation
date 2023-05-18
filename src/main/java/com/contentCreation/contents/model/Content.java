@@ -30,8 +30,9 @@ public class Content {
     public String userName;
     private String title;
     private String description;
-    @Lob
-    private byte[] mediaFilePath;
+//    @Lob
+//    private byte[] mediaFilePath;
+    String mediaFilePath;
     @CreationTimestamp()
     private Date uploadedTime;
     @UpdateTimestamp
@@ -49,8 +50,8 @@ public class Content {
     }
 
 
-    public void setMediaFilePath(MultipartFile multipartFile) throws IOException {
-        mediaFilePath = multipartFile.getBytes();
-    }
+//    public void setMediaFilePath(MultipartFile multipartFile) throws IOException {
+//        mediaFilePath = multipartFile.getBytes();
+//    }
 
 }
