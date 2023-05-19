@@ -14,11 +14,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+
 import java.util.List;
 
 @RestController
@@ -34,7 +36,7 @@ public class contentController {
     private ObjectMapper mapper;
 
     @PostMapping
-    public ResponseEntity<Content> createContent(@RequestParam String content, @RequestParam MultipartFile file) throws JsonProcessingException {
+    public ResponseEntity<Content> createContent(@RequestParam String content, @RequestParam MultipartFile file) throws IOException {
         Content content1 = mapper.readValue(content, Content.class);
         log.info("Content {} created", content1);
         String fileUrl = null;
