@@ -51,7 +51,7 @@ public class contentController {
                 String fileName = file.getOriginalFilename();
                 Path path = Paths.get(fileStorageLocation + File.separator + fileName);
                 Files.write(path, file.getBytes());
-                System.out.println(path);
+                //System.out.println(path);
                 // 4. Store the file path or URL in the database
                 fileUrl = "http://localhost:8080/images/" + fileName; // replace with actual file URL
             }
